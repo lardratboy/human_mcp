@@ -1,0 +1,74 @@
+QUICK START GUIDE - Human-Controlled MCP Server
+================================================
+
+STEP 1: Install Dependencies
+-----------------------------
+pip install flask mcp
+
+
+STEP 2: Edit Configuration
+---------------------------
+Find your Claude Desktop config file:
+  macOS: ~/Library/Application Support/Claude/claude_desktop_config.json
+  Windows: %APPDATA%\Claude\claude_desktop_config.json
+
+Add this (replace /path/to/ with actual path):
+
+{
+  "mcpServers": {
+    "human-controlled": {
+      "command": "python",
+      "args": ["/path/to/human_mcp_server.py"]
+    }
+  }
+}
+
+
+STEP 3: Start Everything
+-------------------------
+1. Restart Claude Desktop
+2. Open browser to: http://localhost:5000
+
+
+STEP 4: Test It!
+-----------------
+In Claude Desktop, try:
+  "Can you ask me what my favorite color is?"
+
+Claude will use the ask_human tool, and you'll see the request
+appear in your web browser at http://localhost:5000
+
+Type your answer in the web interface and click Submit!
+
+
+AVAILABLE TOOLS
+===============
+1. ask_human - Ask the human any question
+2. human_search - Request the human to search for info
+3. human_decision - Ask the human to make a decision
+
+
+TIPS
+====
+- Keep the web interface open while chatting with Claude
+- Requests timeout after 5 minutes if not answered
+- You can respond with errors if needed
+- Check the README.md for full documentation
+
+
+TROUBLESHOOTING
+===============
+Can't connect?
+  → Check the path in claude_desktop_config.json is absolute
+  → Restart Claude Desktop after config changes
+
+Web interface not loading?
+  → Make sure port 5000 isn't in use
+  → Try: lsof -i :5000
+
+Server won't start?
+  → Install dependencies: pip install flask mcp
+  → Check Python version (3.8+ required)
+
+
+That's it! Enjoy your human-powered MCP server! 🎮

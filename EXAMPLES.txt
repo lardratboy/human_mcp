@@ -1,0 +1,185 @@
+EXAMPLE CONVERSATIONS - Human-Controlled MCP Server
+===================================================
+
+Here are some example conversations showing how to use the
+human-controlled MCP server with Claude.
+
+
+EXAMPLE 1: Simple Question
+---------------------------
+YOU: "Claude, ask me what I want for lunch today."
+
+CLAUDE: [Uses ask_human tool internally]
+
+[WEB INTERFACE SHOWS]:
+  Tool: ask_human
+  Question: "What would you like for lunch today?"
+  Context: "The user requested that I ask them this."
+
+[YOU TYPE IN WEB]: "I'd like a turkey sandwich and some chips"
+
+CLAUDE: "You'd like a turkey sandwich and some chips for lunch today!"
+
+
+EXAMPLE 2: Information Search
+------------------------------
+YOU: "Claude, I need to know our Q4 sales numbers but I don't have 
+      them handy. Can you ask me to look them up?"
+
+CLAUDE: [Uses human_search tool]
+
+[WEB INTERFACE SHOWS]:
+  Tool: human_search
+  Query: "Q4 sales numbers"
+  Sources: "Company financial records or dashboard"
+
+[YOU LOOK IT UP AND TYPE]: "Q4 sales were $2.3M, up 15% from Q3"
+
+CLAUDE: "Based on your search, Q4 sales were $2.3M, representing 
+        a 15% increase from Q3. That's great growth!"
+
+
+EXAMPLE 3: Decision Making
+---------------------------
+YOU: "I'm trying to decide between Python and Go for a new project.
+      Can you help me think through it and then ask me to decide?"
+
+CLAUDE: "Let me outline the trade-offs:
+        
+        Python Pros: Faster development, more libraries, easier hiring
+        Python Cons: Slower runtime, GIL limitations
+        
+        Go Pros: Better performance, great concurrency, simple deployment
+        Go Cons: Smaller ecosystem, more verbose
+        
+        [Uses human_decision tool]"
+
+[WEB INTERFACE SHOWS]:
+  Tool: human_decision
+  Decision Needed: "Choose between Python and Go for new project"
+  Options: "Python (faster development) vs Go (better performance)"
+  Recommendation: "Python for MVP speed, Go for production scale"
+
+[YOU TYPE]: "Let's go with Python for now, we can always rewrite 
+            performance-critical parts in Go later if needed"
+
+CLAUDE: "Great decision! Starting with Python makes sense for rapid 
+        development. You can profile and optimize specific bottlenecks 
+        with Go later if needed."
+
+
+EXAMPLE 4: Creative Input
+--------------------------
+YOU: "Help me write a story, but ask me for key decisions about 
+      the plot as we go."
+
+CLAUDE: "I'd love to! Let's start building the story together.
+        [Uses ask_human tool]"
+
+[WEB INTERFACE SHOWS]:
+  Question: "What genre should our story be? Fantasy, sci-fi, 
+            mystery, or something else?"
+
+[YOU TYPE]: "Sci-fi thriller set on a space station"
+
+CLAUDE: "Excellent! A sci-fi thriller on a space station. 
+        [Uses ask_human tool again]"
+
+[WEB INTERFACE SHOWS]:
+  Question: "What's the inciting incident that kicks off our thriller?"
+
+[YOU TYPE]: "The station's AI starts behaving strangely and people 
+            begin disappearing"
+
+CLAUDE: "Ooh, creepy! Let me start writing...
+        [Continues the collaborative story creation]"
+
+
+EXAMPLE 5: Code Review
+-----------------------
+YOU: "I've written a function but I'm not sure if the approach is 
+      right. Can you review it and ask me to approve or suggest 
+      changes?"
+
+CLAUDE: "I'll review the function and get your input.
+        [After analyzing]
+        
+        [Uses human_decision tool]"
+
+[WEB INTERFACE SHOWS]:
+  Decision Needed: "Approve current implementation or revise"
+  Options: 
+    "1. Keep current recursive approach (cleaner code, stack risk)
+     2. Switch to iterative approach (more code, safer)
+     3. Hybrid with tail recursion optimization"
+  Recommendation: "Option 3 - hybrid approach balances elegance 
+                  and safety"
+
+[YOU TYPE]: "Let's go with option 3, the hybrid approach"
+
+CLAUDE: "Great choice! Here's the refactored version with tail 
+        recursion optimization..."
+
+
+EXAMPLE 6: Personal Assistant
+------------------------------
+YOU: "What's on my schedule for today? You'll need to ask me."
+
+CLAUDE: "[Uses ask_human tool]"
+
+[WEB INTERFACE SHOWS]:
+  Question: "What events do you have scheduled for today?"
+  Context: "User wants to know their daily schedule"
+
+[YOU CHECK CALENDAR AND TYPE]: 
+  "10am: Team standup
+   2pm: Client presentation  
+   4pm: Code review with Sarah
+   6pm: Dinner with Alex"
+
+CLAUDE: "Here's your schedule for today:
+        
+        • 10am - Team standup
+        • 2pm - Client presentation (coming up soon!)
+        • 4pm - Code review with Sarah
+        • 6pm - Dinner with Alex
+        
+        Your client presentation is your next major event. 
+        Would you like help preparing?"
+
+
+TIPS FOR EFFECTIVE USE
+=======================
+
+1. BE SPECIFIC: When Claude asks you questions, provide detailed
+   answers to get better follow-up responses.
+
+2. USE CONTEXT: The web interface shows the full context of why
+   Claude is asking - use this to inform your response.
+
+3. ERRORS ARE OK: If Claude asks something you can't answer or
+   don't want to answer, use the "Return Error" button.
+
+4. CHAIN REQUESTS: Claude can make multiple requests in a row
+   for complex tasks - each will appear in your web interface.
+
+5. TIMEOUT AWARENESS: You have 5 minutes to respond before a
+   request times out. Keep the interface open!
+
+
+CREATIVE USES
+=============
+
+• Teaching tool demonstrations
+• Interactive storytelling
+• Guided decision-making processes
+• Research assistance workflows  
+• Code review and approval workflows
+• Personal knowledge base (you are the database!)
+• Meeting facilitation
+• Brainstorming sessions
+• Interview practice
+• Game master for text-based games
+
+
+Have fun with your human-powered MCP server! 🚀

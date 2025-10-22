@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "human-controlled": {
+      "command": "python",
+      "args": [
+        "/absolute/path/to/human_mcp_server.py"
+      ]
+    }
+  }
+}
