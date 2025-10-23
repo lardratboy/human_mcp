@@ -63,7 +63,7 @@ You have two options:
 **Option A: Via Claude Desktop** (Recommended)
 - Just restart Claude Desktop after configuring
 - The server starts automatically when Claude Desktop launches
-- Open your browser to http://localhost:5000
+- Open your browser to http://localhost:5001
 
 **Option B: Standalone Testing**
 ```bash
@@ -73,7 +73,7 @@ Then connect via Claude Desktop or test with an MCP client.
 
 ### 4. Open the Web Interface
 
-Navigate to: **http://localhost:5000**
+Navigate to: **http://localhost:5001**
 
 You'll see the Human MCP Control Panel where you can respond to Claude's requests.
 
@@ -143,12 +143,12 @@ Ask the human to make a decision.
 - **Server**: Python with Flask for web interface
 - **Transport**: Standard input/output for MCP, HTTP for web UI
 - **Timeout**: 5 minutes per request
-- **Port**: 5000 (web interface)
+- **Port**: 5001 (web interface)
 
 ## Troubleshooting
 
 ### Server won't start
-- Check that port 5000 isn't already in use
+- Check that port 5001 isn't already in use
 - Verify Python dependencies are installed: `pip list | grep -E "flask|mcp"`
 
 ### Claude can't connect
@@ -157,8 +157,8 @@ Ask the human to make a decision.
 - Check Claude Desktop logs for errors
 
 ### Web interface not accessible
-- Make sure the server is running: `lsof -i :5000`
-- Try accessing `http://127.0.0.1:5000` instead of `localhost`
+- Make sure the server is running: `lsof -i :5001`
+- Try accessing `http://127.0.0.1:5001` instead of `localhost`
 - Check your firewall settings
 
 ### Requests timing out
