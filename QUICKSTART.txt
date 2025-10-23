@@ -27,7 +27,7 @@ Add this (replace /path/to/ with actual path):
 STEP 3: Start Everything
 -------------------------
 1. Restart Claude Desktop
-2. Open browser to: http://localhost:5000
+2. Open browser to: http://localhost:5001
 
 
 STEP 4: Test It!
@@ -36,7 +36,7 @@ In Claude Desktop, try:
   "Can you ask me what my favorite color is?"
 
 Claude will use the ask_human tool, and you'll see the request
-appear in your web browser at http://localhost:5000
+appear in your web browser at http://localhost:5001
 
 Type your answer in the web interface and click Submit!
 
@@ -63,8 +63,8 @@ Can't connect?
   → Restart Claude Desktop after config changes
 
 Web interface not loading?
-  → Make sure port 5000 isn't in use
-  → Try: lsof -i :5000
+  → Make sure port 5001 isn't in use
+  → Try: lsof -i :5001
 
 Server won't start?
   → Install dependencies: pip install flask mcp
