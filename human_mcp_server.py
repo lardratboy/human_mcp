@@ -328,6 +328,7 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     <script>
         let pendingCount = 0;
         let completedCount = 0;
+        let currentRequestIds = new Set();
         
         function showNotification(message) {
             const notif = document.getElementById('notification');
@@ -350,58 +351,83 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
         
         function renderRequests(requests) {
             const container = document.getElementById('requestsContainer');
+            const requestIds = Object.keys(requests);
             
-            if (Object.keys(requests).length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">⏳</div>
-                        <div class="empty-state-text">Waiting for Claude to make a request...</div>
-                    </div>
-                `;
+            // If no requests, show empty state
+            if (requestIds.length === 0) {
+                if (currentRequestIds.size > 0) {
+                    // Had requests before, now empty - clear everything
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">⏳</div>
+                            <div class="empty-state-text">Waiting for Claude to make a request...</div>
+                        </div>
+                    `;
+                    currentRequestIds.clear();
+                }
                 return;
             }
             
-            container.innerHTML = '';
+            // Check if this is the first request (empty state needs to be cleared)
+            if (currentRequestIds.size === 0 && requestIds.length > 0) {
+                container.innerHTML = '';
+            }
             
+            // Remove cards for requests that no longer exist
+            for (const oldId of currentRequestIds) {
+                if (!requests[oldId]) {
+                    const oldCard = document.getElementById(`card-${oldId}`);
+                    if (oldCard) {
+                        oldCard.remove();
+                    }
+                    currentRequestIds.delete(oldId);
+                }
+            }
+            
+            // Add cards for new requests
             for (const [requestId, reqData] of Object.entries(requests)) {
-                const card = document.createElement('div');
-                card.className = 'request-card';
-                card.innerHTML = `
-                    <div class="request-header">
-                        <div class="request-title">🔧 ${reqData.tool_name}</div>
-                        <div class="request-time">${formatTime(reqData.timestamp)}</div>
-                    </div>
-                    
-                    <div class="request-details">
-                        <div class="detail-row">
-                            <span class="detail-label">Request ID:</span>
-                            <span class="detail-value">${requestId}</span>
+                if (!currentRequestIds.has(requestId)) {
+                    const card = document.createElement('div');
+                    card.id = `card-${requestId}`;
+                    card.className = 'request-card';
+                    card.innerHTML = `
+                        <div class="request-header">
+                            <div class="request-title">🔧 ${reqData.tool_name}</div>
+                            <div class="request-time">${formatTime(reqData.timestamp)}</div>
                         </div>
-                        <div class="detail-row">
-                            <span class="detail-label">Tool:</span>
-                            <span class="detail-value">${reqData.tool_name}</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">Parameters:</span>
-                        </div>
-                        <div class="params-json">${JSON.stringify(reqData.arguments, null, 2)}</div>
-                    </div>
-                    
-                    <div class="response-section">
-                        <label for="response-${requestId}">Your Response:</label>
-                        <textarea id="response-${requestId}" placeholder="Type your response here..."></textarea>
                         
-                        <div class="button-group">
-                            <button class="btn-submit" onclick="submitResponse('${requestId}', false)">
-                                ✓ Submit Response
-                            </button>
-                            <button class="btn-error" onclick="submitResponse('${requestId}', true)">
-                                ✗ Return Error
-                            </button>
+                        <div class="request-details">
+                            <div class="detail-row">
+                                <span class="detail-label">Request ID:</span>
+                                <span class="detail-value">${requestId}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Tool:</span>
+                                <span class="detail-value">${reqData.tool_name}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Parameters:</span>
+                            </div>
+                            <div class="params-json">${JSON.stringify(reqData.arguments, null, 2)}</div>
                         </div>
-                    </div>
-                `;
-                container.appendChild(card);
+                        
+                        <div class="response-section">
+                            <label for="response-${requestId}">Your Response:</label>
+                            <textarea id="response-${requestId}" placeholder="Type your response here..."></textarea>
+                            
+                            <div class="button-group">
+                                <button class="btn-submit" onclick="submitResponse('${requestId}', false)">
+                                    ✓ Submit Response
+                                </button>
+                                <button class="btn-error" onclick="submitResponse('${requestId}', true)">
+                                    ✗ Return Error
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                    currentRequestIds.add(requestId);
+                }
             }
         }
         
@@ -494,7 +520,7 @@ def submit_response():
 
 def run_flask():
     """Run Flask in a separate thread"""
-    app.run(host='0.0.0.0', port=5000, debug=False, use_reloader=False)
+    app.run(host='0.0.0.0', port=5001, debug=False, use_reloader=False)
 
 # MCP Server
 server = Server("human-controlled-mcp")
@@ -611,7 +637,7 @@ async def main():
     flask_thread.start()
     
     logger.info("Human MCP Server starting...")
-    logger.info("Web interface available at: http://localhost:5000")
+    logger.info("Web interface available at: http://localhost:5001")
     logger.info("Waiting for MCP client connection via stdio...")
     
     async with stdio_server() as (read_stream, write_stream):
